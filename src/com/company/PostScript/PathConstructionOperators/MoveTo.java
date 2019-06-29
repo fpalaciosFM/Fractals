@@ -1,6 +1,7 @@
 package com.company.PostScript.PathConstructionOperators;
 
 import com.company.Canvas.Canvas;
+import com.company.Misc.MyMath;
 import com.company.PostScript.PostScriptInstruction;
 
 public class MoveTo extends PostScriptInstruction {
@@ -14,6 +15,6 @@ public class MoveTo extends PostScriptInstruction {
 
     @Override
     public String performOn(Canvas c) {
-        return x + " " + y + " moveto";
+        return MyMath.round(x) + " " + MyMath.round(y) + " moveto";
     }
 }

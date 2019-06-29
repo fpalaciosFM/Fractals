@@ -1,0 +1,7 @@
+# PostScript files
+*.ps
+
+# IntelliJ Idea
+.idea
+out
+*.iml

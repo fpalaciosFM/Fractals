@@ -1,6 +1,7 @@
 package com.company.PostScript.PathConstructionOperators;
 
 import com.company.Canvas.Canvas;
+import com.company.Misc.MyMath;
 import com.company.PostScript.PostScriptInstruction;
 
 public class LineTo extends PostScriptInstruction {
@@ -15,6 +16,6 @@ public class LineTo extends PostScriptInstruction {
     @Override
     public String performOn(Canvas c) {
         c.updateDimensions(x,y);
-        return x + " " + y + " lineto";
+        return MyMath.round(x) + " " + MyMath.round(y) + " lineto";
     }
 }
