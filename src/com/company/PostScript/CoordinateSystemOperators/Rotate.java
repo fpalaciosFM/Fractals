@@ -1,6 +1,7 @@
 package com.company.PostScript.CoordinateSystemOperators;
 
 import com.company.Canvas.Canvas;
+import com.company.Misc.MyMath;
 import com.company.PostScript.PostScriptInstruction;
 
 public class Rotate extends PostScriptInstruction {
@@ -12,6 +13,6 @@ public class Rotate extends PostScriptInstruction {
 
     @Override
     public String performOn(Canvas c) {
-        return angle + " angle";
+        return MyMath.round(angle) + " rotate";
     }
 }
