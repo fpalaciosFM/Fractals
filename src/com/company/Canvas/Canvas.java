@@ -9,13 +9,13 @@ import java.util.ArrayList;
 public abstract class Canvas {
     protected double xPos;
     protected double yPos;
-    protected double xMin;
-    protected double yMin;
-    protected double xMax;
-    protected double yMax;
-    protected double xScale;
-    protected double yScale;
-    protected ArrayList<Canvas> subcanvas;
+    private double xMin;
+    private double yMin;
+    private double xMax;
+    private double yMax;
+    private double xScale;
+    private double yScale;
+    private ArrayList<Canvas> subcanvas;
     protected ArrayList<PostScriptInstruction> instructions;
 
     public Canvas(double xPos, double yPos, double xMin, double yMin, double xMax, double yMax, double xScale, double yScale, ArrayList<Canvas> subcanvas, ArrayList<PostScriptInstruction> instructions) {
@@ -113,8 +113,10 @@ public abstract class Canvas {
         return draw(new Margin(0));
     }
 
-    public void traceSubcanvas(ArrayList<String> strings) {
-        initSubcanvas();
+    private void traceSubcanvas(ArrayList<String> strings) {
+        if (this.subcanvas.size() <= 0) {
+            initSubcanvas();
+        }
         for (Canvas canvas : this.subcanvas) {
             canvas.traceSubcanvas(strings);
             canvas.trace(strings);
@@ -123,9 +125,15 @@ public abstract class Canvas {
         }
     }
 
-    public abstract void trace(ArrayList<String> strings);
+    public void trace(ArrayList<String> strings) {
+        this.initInstructions();
+        for (PostScriptInstruction instruction : this.instructions) {
+            strings.add(instruction.performOn(this));
+        }
+    }
 
     public abstract void initSubcanvas();
+    public abstract void initInstructions();
 
     public void updateDimensions(double x, double y) {
         this.setxMin(Math.min(xMin, x));
