@@ -2,6 +2,7 @@ package com.company.PostScript.GraphicsStateOperators;
 
 import com.company.Canvas.Canvas;
 import com.company.Color.Color;
+import com.company.Misc.MyMath;
 import com.company.PostScript.PostScriptInstruction;
 
 public class SetRGBColor extends PostScriptInstruction {
@@ -13,6 +14,6 @@ public class SetRGBColor extends PostScriptInstruction {
 
     @Override
     public String performOn(Canvas c) {
-        return color.getRed() + " " + color.getGreen() + " " + color.getBlue() + " setrgbcolor";
+        return MyMath.round(color.getRed()) + " " + MyMath.round(color.getGreen()) + " " + MyMath.round(color.getBlue()) + " setrgbcolor";
     }
 }

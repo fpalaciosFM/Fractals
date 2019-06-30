@@ -7,16 +7,16 @@ import com.company.PostScript.PostScriptInstruction;
 import java.util.ArrayList;
 
 public abstract class Canvas {
-    private double xPos;
-    private double yPos;
-    private double xMin;
-    private double yMin;
-    private double xMax;
-    private double yMax;
-    private double xScale;
-    private double yScale;
-    private ArrayList<Canvas> subcanvas;
-    private ArrayList<PostScriptInstruction> instructions;
+    protected double xPos;
+    protected double yPos;
+    protected double xMin;
+    protected double yMin;
+    protected double xMax;
+    protected double yMax;
+    protected double xScale;
+    protected double yScale;
+    protected ArrayList<Canvas> subcanvas;
+    protected ArrayList<PostScriptInstruction> instructions;
 
     public Canvas(double xPos, double yPos, double xMin, double yMin, double xMax, double yMax, double xScale, double yScale, ArrayList<Canvas> subcanvas, ArrayList<PostScriptInstruction> instructions) {
         this.xPos = xPos;
@@ -95,33 +95,58 @@ public abstract class Canvas {
         return instructions;
     }
 
-    public ArrayList<String> draw() {
+    public ArrayList<String> draw(Margin margin) {
         ArrayList<String> strings = new ArrayList<>();
         this.trace(strings);
-        for (Canvas canvas : this.subcanvas) {
-            canvas.trace(strings);
-            updateDimensions(canvas.xMax,canvas.yMax);
-            updateDimensions(canvas.xMin,canvas.yMin);
-        }
-        strings.add(0,(new Translate(-this.xMin,-this.yMin)).performOn(this));
-        strings.add(0,(new SetPageDevice(this.xMax-this.xMin,this.yMax-this.yMin)).performOn(this));
+        this.traceSubcanvas(strings);
+        strings.add(0, (new Translate(margin.getLeftMargin() - this.xMin, margin.getBottomMargin() - this.yMin)).performOn(this));
+        strings.add(0, (
+                new SetPageDevice(
+                        (margin.getLeftMargin() + margin.getRightMargin()) + (this.xMax - this.xMin),
+                        (margin.getBottomMargin() + margin.getTopMargin()) + (this.yMax - this.yMin)
+                )).performOn(this)
+        );
         return strings;
     }
 
-    public void updateDimensions(double x, double y){
-        if (this.getxMin()>x){
-            this.setxMin(x);
-        }
-        if (this.getxMax()<x){
-            this.setxMax(x);
-        }
-        if (this.getyMin()>y){
-            this.setyMin(y);
-        }
-        if (this.getyMax()<y){
-            this.setyMax(y);
+    public ArrayList<String> draw() {
+        return draw(new Margin(0));
+    }
+
+    public void traceSubcanvas(ArrayList<String> strings) {
+        initSubcanvas();
+        for (Canvas canvas : this.subcanvas) {
+            canvas.traceSubcanvas(strings);
+            canvas.trace(strings);
+            updateDimensions(canvas.xMax, canvas.yMax);
+            updateDimensions(canvas.xMin, canvas.yMin);
         }
     }
 
     public abstract void trace(ArrayList<String> strings);
+
+    public abstract void initSubcanvas();
+
+    public void updateDimensions(double x, double y) {
+        this.setxMin(Math.min(xMin, x));
+        this.setxMax(Math.max(xMax, x));
+        this.setyMin(Math.min(yMin, y));
+        this.setyMax(Math.max(yMax, y));
+    }
+
+    @Override
+    public String toString() {
+        return "Canvas{" +
+                "xPos=" + xPos +
+                ", yPos=" + yPos +
+                ", xMin=" + xMin +
+                ", yMin=" + yMin +
+                ", xMax=" + xMax +
+                ", yMax=" + yMax +
+                ", xScale=" + xScale +
+                ", yScale=" + yScale +
+                ", subcanvas=" + subcanvas +
+                ", instructions=" + instructions +
+                '}';
+    }
 }

@@ -15,7 +15,7 @@ public class LineTo extends PostScriptInstruction {
 
     @Override
     public String performOn(Canvas c) {
-        c.updateDimensions(x,y);
+        c.updateDimensions(x, y);
         return MyMath.round(x) + " " + MyMath.round(y) + " lineto";
     }
 }

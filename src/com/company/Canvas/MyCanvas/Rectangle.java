@@ -11,16 +11,14 @@ import com.company.PostScript.PathConstructionOperators.MoveTo;
 import java.util.ArrayList;
 
 public class Rectangle extends Canvas {
-    private double x;
-    private double y;
     private double width;
     private double height;
     private Color color;
 
-    public Rectangle(double x, double y, double width, double height, Color color) {
+    public Rectangle(double xPos, double yPos, double width, double height, Color color) {
         super();
-        this.x = x;
-        this.y = y;
+        this.xPos = xPos;
+        this.yPos = yPos;
         this.width = width;
         this.height = height;
         this.color = color;
@@ -28,13 +26,18 @@ public class Rectangle extends Canvas {
 
     @Override
     public void trace(ArrayList<String> strings) {
-        strings.add((new MoveTo(x, y)).performOn(this));
-        strings.add((new LineTo(x + width, y)).performOn(this));
-        strings.add((new LineTo(x + width, y + height)).performOn(this));
-        strings.add((new LineTo(x, y + height)).performOn(this));
-        strings.add((new LineTo(x, y)).performOn(this));
+        strings.add((new MoveTo(xPos, yPos)).performOn(this));
+        strings.add((new LineTo(xPos + width, yPos)).performOn(this));
+        strings.add((new LineTo(xPos + width, yPos + height)).performOn(this));
+        strings.add((new LineTo(xPos, yPos + height)).performOn(this));
+        strings.add((new LineTo(xPos, yPos)).performOn(this));
         strings.add((new SetRGBColor(color)).performOn(this));
         strings.add((new Stroke()).performOn(this));
         strings.add((new Fill()).performOn(this));
+    }
+
+    @Override
+    public void initSubcanvas() {
+
     }
 }
